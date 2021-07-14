@@ -25,14 +25,17 @@ MazeGenerator Class:
         - map_size (int) - 
     
 """
+SCALE_FACTOR = 2
+
+
 class MazeGenerator:
     def __init__(self, map_size):
         assert(isinstance(map_size, int))
         self.map_size = map_size
         self.map = None
         self.starting_loc = None
-        self.free = 0
-        self.wall = 1
+        self.free = int(0)
+        self.wall = int(1)
 
         self.builder_stack = []
 
@@ -40,20 +43,28 @@ class MazeGenerator:
 
         # init all values to infinity to mark them as unvisited
         self.builder_map = np.ones((map_size, map_size)) * np.inf
-        self.map = np.ones((2 * map_size, 2 * map_size)) # Map is 2 times bigger to accommodate walls
+        # Map is 2 times bigger to accommodate walls
+        self.map = np.ones((SCALE_FACTOR * map_size, SCALE_FACTOR * map_size))
 
         self.builder_map = np.pad(self.builder_map, 1, constant_values=self.wall)
         self.map = np.pad(self.map, 1, constant_values=self.wall)
 
-        self.starting_loc = (np.random.randint(1, map_size-1),
-                             np.random.randint(1, map_size-1))
+        self.builder_starting_loc = (np.random.randint(1, map_size-1),
+                                    np.random.randint(1, map_size-1))
+
+        self.starting_loc = self.builder_starting_loc * SCALE_FACTOR
+
+        self.builder_goal_loc = (np.random.randint(1, map_size - 1),
+                                 np.random.randint(1, map_size - 1))
+
+        self.goal_loc = self.builder_goal_loc * SCALE_FACTOR
 
     def create_map(self):
         # use iterative maze generation algorithm
         # choose the initial cell, mark it as visited and push it to the stack
-        current_cell = self.starting_loc
+        current_cell = self.builder_starting_loc
         self.map[current_cell[0], current_cell[1]] = self.free
-        self.builder_stack.append(self.starting_loc)
+        self.builder_stack.append(self.builder_starting_loc)
 
         while self.builder_stack:
             # pop a cell from the stack and make it the current cell
@@ -63,10 +74,12 @@ class MazeGenerator:
             new_cell, direction = self.check_for_unvisited_neighbors(current_cell)
             if new_cell:
                 self.builder_stack.append(current_cell)
-                self.map[2 * new_cell[0], 2 * new_cell[1]] = self.free
-                self.map[2 * current_cell[0] + direction[0], 2 * current_cell[1] + direction[1]] = self.free
+                self.map[SCALE_FACTOR * new_cell[0], SCALE_FACTOR * new_cell[1]] = self.free
+                self.map[SCALE_FACTOR * current_cell[0] + direction[0], SCALE_FACTOR * current_cell[1] + direction[1]] = self.free
                 self.builder_map[new_cell[0], new_cell[1]] = self.free
                 self.builder_stack.append(new_cell)
+
+        self.map[SCALE_FACTOR * self.goal_loc[0], SCALE_FACTOR * self.goal_loc[1]] = self.free
 
     def check_for_unvisited_neighbors(self, cell):
         assert(isinstance(cell, tuple))
@@ -95,13 +108,37 @@ class MazeGenerator:
 
         plt.show()
 
+    def write_map(self, map_file_str):
+        assert(isinstance(self.map, np.ndarray))
+        map_file = open(map_file_str, "w+")
+
+        map_file.write("map_size\n")
+        map_file.write(str(self.map.shape[0]) + "," + str(self.map.shape[1]) + "\n")
+        map_file.write("collision_threshold\n")
+        map_file.write(str(1) + "\n")
+        map_file.write("starting_pose\n")
+        map_file.write(str(self.starting_loc[0]) + "," + str(self.starting_loc[1]) + "\n")
+        map_file.write("goal_pose\n")
+        map_file.write(str(self.goal_loc[0]) + "," + str(self.goal_loc[1]) + "\n")
+        map_file.write("map\n")
+        for i in range(self.map.size):
+            map_file.write(str(int(self.map.ravel()[i])))
+            if i != self.map.size-1:
+                map_file.write(",")
+        map_file.write("\r\n")
+
+        # clean up resources
+        map_file.close()
+
 
 
 if __name__ == "__main__":
     map_size = int(20)
+    output_file = "map1.txt"
 
     MazeGeneratorObj = MazeGenerator(map_size)
     MazeGeneratorObj.init_map()
     MazeGeneratorObj.create_map()
     MazeGeneratorObj.visualize_map()
+    MazeGeneratorObj.write_map(output_file)
 
