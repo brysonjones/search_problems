@@ -4,6 +4,6 @@ mkdir -p build
 
 cd build
 
-cmake ..
+cmake .. 
 
 cmake --build .

@@ -1,14 +1,84 @@
 
 #include <iostream>
 #include "planner/searchAlgorithm/searchAlgorithm.hpp"
+#include "robot/robot.hpp"
+#include "shader/shader.hpp"
+#include "window/window.hpp"
+#include "graphics/graphics.hpp"
 
-int main(int argc, char** argv)
+// int main(int argc, char** argv)
+// {
+//     std::cout << "Initializing maze search\n";
+
+//     Robot mazeBot();
+
+//     std::cout << "Ending maze search\n";
+
+//     return 0;
+// }
+
+
+float vertices[] = {
+    // positions         // colors
+     0.25f, -0.25f, 0.0f,  1.0f, 1.0f, 0.0f,   // bottom right
+    -0.25f, -0.25f, 0.0f,  0.0f, 1.0f, 1.0f,   // bottom left
+     0.25f,  0.25f, 0.0f,  0.0f, 1.0f, 1.0f,   // top right
+    -0.25f,  0.25f, 0.0f,  1.0f, 1.0f, 0.0f,   // top left
+};   
+unsigned int indices[] = {
+    0, 1, 2, // first triangle
+    1, 2, 3  // second triangle
+}; 
+
+int main()
 {
-    std::cout << "You have entered " << argc
-         << " arguments:" << "\n";
-  
-    for (int i = 0; i < argc; ++i)
-        std::cout << argv[i] << "\n";
-  
+    // glfw window creation
+    // --------------------
+    Window window;
+    if (window.setup()){
+        return 1;
+    }
+
+    // set up shader object
+    Shader shader; 
+
+    shader.setup_shader_program(vertices, sizeof(vertices), indices, sizeof(indices), 0);
+    shader.setup_shader_program(vertices, sizeof(vertices), indices, sizeof(indices), 1);
+
+
+    // render loop
+    // -----------
+    while (!window.render_loop()){
+
+        // create transformations
+        float x = 0.1*sin(glfwGetTime());
+        float y = 0.1*cos(4*glfwGetTime());
+        float theta = 0.1*tan(glfwGetTime());
+
+        glBindVertexArray(shader.VAO_vec[0]);
+        shader.use();
+        graphics::transform_2D(x, y, theta, shader.ID);
+
+        // create transformations
+        x = 0.5*sin(glfwGetTime());
+        y = 0.5*cos(4*glfwGetTime());
+        theta = 1*tan(glfwGetTime());
+        
+        glBindVertexArray(shader.VAO_vec[1]);
+        shader.use();
+        graphics::transform_2D(x, y, theta, shader.ID);
+
+    }
+
+    // optional: de-allocate all resources once they've outlived their purpose:
+    // ------------------------------------------------------------------------
+    while(shader.VAO_vec.size() > 0){
+        shader.delete_vertex_array(0);
+    }
+
+    // glfw: terminate, clearing all previously allocated GLFW resources.
+    // ------------------------------------------------------------------
+    glfwTerminate();
+
     return 0;
 }
