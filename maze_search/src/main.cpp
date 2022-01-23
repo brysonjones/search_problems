@@ -1,21 +1,14 @@
 
+// external imports
 #include <iostream>
-#include "planner/searchAlgorithm/searchAlgorithm.hpp"
-#include "robot/robot.hpp"
 #include "shader/shader.hpp"
 #include "window/window.hpp"
 #include "graphics/graphics.hpp"
 
-// int main(int argc, char** argv)
-// {
-//     std::cout << "Initializing maze search\n";
-
-//     Robot mazeBot();
-
-//     std::cout << "Ending maze search\n";
-
-//     return 0;
-// }
+// internal imports
+#include "planner/searchAlgorithm/searchAlgorithm.hpp"
+#include "robot/robot.hpp"
+#include "visualizer/visualizer.hpp"
 
 
 float vertices[] = {
@@ -30,8 +23,12 @@ unsigned int indices[] = {
     1, 2, 3  // second triangle
 }; 
 
-int main()
+int main(int argc, char** argv)
 {
+    // create robot
+    Robot robot(0, 0);
+    robot.setup(GREEN);
+
     // glfw window creation
     // --------------------
     Window window;
@@ -42,8 +39,8 @@ int main()
     // set up shader object
     Shader shader; 
 
-    shader.setup_shader_program(vertices, sizeof(vertices), indices, sizeof(indices), 0);
-    shader.setup_shader_program(vertices, sizeof(vertices), indices, sizeof(indices), 1);
+    shader.setup_shader_program(robot.vertices, sizeof(robot.vertices), indices, sizeof(indices), 0);
+    shader.setup_shader_program(robot.vertices, sizeof(robot.vertices), indices, sizeof(indices), 1);
 
 
     // render loop

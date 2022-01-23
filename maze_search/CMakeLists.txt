@@ -28,6 +28,7 @@ add_subdirectory(src)
 add_executable(main src/main.cpp)
 
 target_link_libraries(main 
+                      robot
                       searchAlgorithm
                       glfw ${GLFW_LIBRARIES} 
                       OpenGL::GL 
