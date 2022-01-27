@@ -2,12 +2,12 @@
 #include "robot.hpp"
 
 // Member functions definitions including constructor
-Robot::Robot(int initialX, int initialY) {
+Robot::Robot() {}
+
+int Robot::setup(int initialX, int initialY, int color) {
     state[0] = initialX;
     state[1] = initialY;
-}
 
-int Robot::setup(int color) {
     std::vector<float> xOffset = {0.05, -0.05, 0.05, -0.05}; // TODO: Convert this to robot size attribute
     std::vector<float> yOffset = {-0.05, -0.05, 0.05, 0.05};
 

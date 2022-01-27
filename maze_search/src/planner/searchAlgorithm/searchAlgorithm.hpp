@@ -13,6 +13,7 @@ class Planner {
         int main();
 
     private:
+        AStar aStarSearch{};
         std::vector<int> initialState;
         std::vector<int> goalState;
 

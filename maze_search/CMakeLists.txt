@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.15.0)
 project (maze_search)
 set (CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Release)
+# set(CMAKE_POSITION_INDEPENDENT_CODE ON) # TODO: Change OGLT library to be Position Independent instead of this. This makes the code less efficient
 
 include(FetchContent)
 enable_testing()
@@ -24,24 +25,32 @@ if(NOT oglt_repoo_POPULATED)
 endif()
 
 add_subdirectory(src)
+# include_directories(src)
 
 add_executable(main src/main.cpp)
 
-target_link_libraries(main 
-                      robot
+target_link_libraries(main
                       searchAlgorithm
-                      glfw ${GLFW_LIBRARIES} 
-                      OpenGL::GL 
-                      ${CMAKE_DL_LIBS}
-                      oglt::graphics oglt::shader oglt::window
-                      glad_libs
-                      glm::glm)
+                      simulator)
 
 set_target_properties(main
+                      robot
+                      searchAlgorithm
+                      visualizer
+                      simulator
     PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/Release"
 )
 
+install(TARGETS 
+              main
+              robot
+              searchAlgorithm
+              visualizer
+              simulator
+        ARCHIVE DESTINATION ARCHIVE_OUTPUT_DIRECTORY
+        LIBRARY DESTINATION LIBRARY_OUTPUT_DIRECTORY
+        RUNTIME DESTINATION RUNTIME_OUTPUT_DIRECTORY)
 

@@ -8,6 +8,7 @@ agents to be deployed, and search algorithms to be tested.
 '''
 
 import numpy as np
+import json
 import random
 import matplotlib.pyplot as plt
 import dash

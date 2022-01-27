@@ -11,8 +11,8 @@ enum ROBOT_COLORS {
 
 class Robot {
     public:
-        Robot(int initialX, int initialY);
-        int setup(int color=RED); // "red", "green", "blue"
+        Robot();
+        int setup(int initialX, int initialY, int color=RED); // "red", "green", "blue"
         std::vector<int> state = {0}; // 1D, 2 values for (X, Y)
         float vertices[24] = {0}; // TODO: Make this initialization more modular
         unsigned int indices[6] = {
