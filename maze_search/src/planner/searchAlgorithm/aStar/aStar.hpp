@@ -29,6 +29,17 @@ struct LessThanByF
     }
 };
 
+// define custom hasing function for vector<int>
+struct VectorHasher {
+    int operator()(const std::vector<int> &V) const {
+        int hash = V.size();
+        for(auto &i : V) {
+            hash ^= i + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+        }
+        return hash;
+    }
+};
+
 }
 
 using namespace aStar;
@@ -36,7 +47,8 @@ using namespace aStar;
 class AStar {
     public:
         AStar();
-        int setup(std::vector<int> robot_start_pose, std::vector<int> goal_pose);
+        int setup(std::vector<int> robot_start_pose, std::vector<int> goal_pose, 
+                 std::vector<std::vector<int>> &enviro_map);
         int search();
         int main();
 
@@ -52,6 +64,7 @@ class AStar {
 
     private:
         bool isStateValid(Node state);
+        bool isGoalExpanded();
         int getHeuristic(Node state);
         std::stack<std::vector<int>> computePath();
     
@@ -59,7 +72,7 @@ class AStar {
         std::vector<int> goal_state;
         std::vector<std::vector<int>> *map;
 
-        std::unordered_map<int, Node> closed_list;
+        std::unordered_map<std::vector<int>, Node, VectorHasher> closed_list;
         std::priority_queue<Node, std::vector<Node>, LessThanByF> open_list;
 
         // init stack for storing path

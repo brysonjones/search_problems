@@ -8,14 +8,13 @@
 class Planner {
     public:
         Planner();
-        int setup();
+        int setup(std::vector<int> robot, std::vector<int> goal_pose, 
+                  std::vector<std::vector<int>> &enviro_map);
         int search();
         int main();
 
     private:
         AStar aStarSearch{};
-        std::vector<int> initialState;
-        std::vector<int> goalState;
 
 };
  
