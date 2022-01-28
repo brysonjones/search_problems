@@ -1,6 +1,7 @@
 
 // external imports
 #include <iostream>
+#include <unistd.h>
 #include "shader/shader.hpp"
 #include "window/window.hpp"
 #include "graphics/graphics.hpp"
@@ -27,12 +28,20 @@ int main(int argc, char** argv)
     // -----------
     while(true){
 
-        if (simulator.visualizer.processRenderEvents()){break;}
+        if (simulator.visualizer.processRenderEvents()) {break;}
 
         // create transformations
         // float theta = 0.1*tan(glfwGetTime());
-        simulator.robot.state[0] =  500*sin(glfwGetTime());
-        simulator.robot.state[1] =  500*cos(glfwGetTime());
+        if (!planner.path.empty()){
+            std::vector<int> state = planner.path.at(0);
+            planner.path.pop_front();
+            simulator.robot.state[0] = state[0];
+            simulator.robot.state[1] = state[1];
+        }
+        else {break;}
+        // simulator.robot.state[0] =  500*sin(glfwGetTime());
+        // simulator.robot.state[1] =  500*cos(glfwGetTime());
+        sleep(0.05);
         simulator.moveRobot();
     }
 

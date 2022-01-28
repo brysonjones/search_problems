@@ -115,7 +115,7 @@ void AStar::computePath(){
 }
 
 void AStar::backTracePath(){
-        path.push(closed_list[goal_state].node_pose);
+        path.push_front(closed_list[goal_state].node_pose);
         std::cout << "Pose - X: " << closed_list[goal_state].node_pose[0] 
                   << ", Y: " << closed_list[goal_state].node_pose[1] << std::endl;
 
@@ -125,17 +125,16 @@ void AStar::backTracePath(){
         mostRecentNode = closed_list[goal_state].parent;
         
         // push node to the top of the stack
-        path.push(mostRecentNode->node_pose);
+        path.push_front(mostRecentNode->node_pose);
         std::cout << "Pose - X: " << mostRecentNode->node_pose[0] 
                 << ", Y: " << mostRecentNode->node_pose[1] << std::endl;
         
         while (mostRecentNode->parent != nullptr){
             // assign the parent of the mostRecentNode to become the Node
             mostRecentNode = mostRecentNode->parent;
-            path.push(mostRecentNode->node_pose);
+            path.push_front(mostRecentNode->node_pose);
             std::cout << "Pose - X: " << mostRecentNode->node_pose[0] 
                     << ", Y: " << mostRecentNode->node_pose[1] << std::endl;
         }
-        
     }
  

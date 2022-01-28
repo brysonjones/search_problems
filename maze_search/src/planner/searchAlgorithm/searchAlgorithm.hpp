@@ -13,7 +13,7 @@ class Planner {
         int search();
         int main();
 
-        std::stack<std::vector<int>> path;
+        std::deque<std::vector<int>> path;
 
 
     private:

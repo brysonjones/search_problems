@@ -19,5 +19,7 @@ int Planner::main() {
     aStarSearch.computePath();
     aStarSearch.backTracePath();
 
+    path = aStarSearch.path;
+
     return 0;
 }

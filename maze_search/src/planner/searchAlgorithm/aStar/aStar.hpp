@@ -1,6 +1,7 @@
 #pragma once
 
 #include<limits.h> 
+#include <deque>
 #include <queue>     
 #include <unordered_map>
 #include <vector>      
@@ -68,6 +69,10 @@ class AStar {
         int y_size = 0;
         int cost = 1;
 
+        // init stack for storing path
+        std::deque<std::vector<int>> path;
+
+
     private:
         bool isStateValid(Node state);
         bool isGoalExpanded();
@@ -83,9 +88,6 @@ class AStar {
         std::unordered_map<std::vector<int>, Node, VectorHasher> closed_list;
         std::priority_queue<Node, std::vector<Node>, LessThanByF> open_list;
         std::unordered_map<std::vector<int>, Node, VectorHasher> open_list_map;
-
-        // init stack for storing path
-        std::stack<std::vector<int>> path;
 
 };
  
