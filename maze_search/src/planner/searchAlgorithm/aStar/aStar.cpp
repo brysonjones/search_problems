@@ -11,6 +11,8 @@ int AStar::setup(std::vector<int> robot_start_pose, std::vector<int> goal_pose,
     initial_state = robot_start_pose;
     goal_state = goal_pose;
     map = &enviro_map; // TOOD: verify this is storing the data properly
+    x_size = map->size();
+    y_size = map[0].size();
 
     // initialize the starting node of the robot
     Node start_node;
@@ -22,16 +24,17 @@ int AStar::setup(std::vector<int> robot_start_pose, std::vector<int> goal_pose,
 
     // push the start node to the open list
     open_list.push(start_node);
+    open_list_map[initial_state] = start_node;
 }
 
 
 bool AStar::isStateValid(Node state)
 { 
     // Returns true if x and y of s_prime is in range 
-    return (state.node_pose[0] > 0) && 
+    return ((state.node_pose[0] >= 0) && 
             (state.node_pose[0] <= x_size) && 
-            (state.node_pose[1] > 0) && 
-            (state.node_pose[1] <= y_size); 
+            (state.node_pose[1] >= 0) && 
+            (state.node_pose[1] <= y_size)); 
 } 
 
 bool AStar::isGoalExpanded(){
@@ -74,10 +77,11 @@ void AStar::insertIntoOpenList(Node &current_state, Node &state_prime){
     state.h = getH(state);
     state.f = state.g + state.h;
     open_list.push(state);
+    open_list_map[state.node_pose] = state;
 
 }
 
-std::stack<std::vector<int>> AStar::computePath(){
+void AStar::computePath(){
     Node current_state;
     Node state_prime;
 
@@ -86,21 +90,28 @@ std::stack<std::vector<int>> AStar::computePath(){
         // remove s with the smallest [f(s) = g(s)+h(s)] from OPEN;
         // insert s into CLOSED;
         current_state = popOpenList();
+
+        // std::cout << "Current State - X: " << current_state.node_pose[0] 
+        //         << ", Y: " << current_state.node_pose[1] << std::endl;
+
         // for every successor s’ of s such that s’ not in CLOSED
         for (int i = 0; i < NUMOFDIRS; i++){
             // update s' location
+            // std::cout << state_prime.node_pose[0] << "\n";
             state_prime.node_pose[0] = current_state.node_pose[0] + dX[i];
             state_prime.node_pose[1] = current_state.node_pose[1] + dY[i]; 
             state_prime.parent = &closed_list[current_state.node_pose];
+            if (!isStateValid(state_prime)){continue;}
             // if g(s’) > g(s) + c(s,s’)
-            if (closed_list.find(state_prime.node_pose) != closed_list.end() &&
+            if (closed_list.find(state_prime.node_pose) == closed_list.end() &&
                 getG(state_prime.node_pose) > current_state.g + cost){
                 // g(s’) = g(s) + c(s,s’);
                 // insert s’ into OPEN;
-                insertIntoOpenList(current_state, state_prime);
+                insertIntoOpenList(current_state, state_prime); 
             }
         }
     }
+    return;
 }
 
 void AStar::backTracePath(){
@@ -116,14 +127,14 @@ void AStar::backTracePath(){
         // push node to the top of the stack
         path.push(mostRecentNode->node_pose);
         std::cout << "Pose - X: " << mostRecentNode->node_pose[0] 
-                  << ", Y: " << mostRecentNode->node_pose[1] << std::endl;
+                << ", Y: " << mostRecentNode->node_pose[1] << std::endl;
         
         while (mostRecentNode->parent != nullptr){
             // assign the parent of the mostRecentNode to become the Node
             mostRecentNode = mostRecentNode->parent;
-            std::cout << "Pose - X: " << mostRecentNode->node_pose[0] 
-                  << ", Y: " << mostRecentNode->node_pose[1] << std::endl;
             path.push(mostRecentNode->node_pose);
+            std::cout << "Pose - X: " << mostRecentNode->node_pose[0] 
+                    << ", Y: " << mostRecentNode->node_pose[1] << std::endl;
         }
         
     }

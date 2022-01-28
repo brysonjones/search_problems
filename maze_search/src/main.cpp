@@ -17,9 +17,10 @@ int main(int argc, char** argv)
     simulator.setup();
 
     std::vector<std::vector<int>> window_map(1000, std::vector<int>(1000));
+    std::vector<int> robot_pose {0, 0};
     std::vector<int> goal {500, 500};
     Planner planner;
-    planner.setup(simulator.robot.state, goal, window_map);
+    planner.setup(robot_pose, goal, window_map);
     planner.main();
 
     // render loop

@@ -17,7 +17,7 @@ int MAX_COST = INT_MAX;
 
 struct Node
 {
-    std::vector<int> node_pose; // <x, y> position on map
+    std::vector<int> node_pose = {0, 0}; // <x, y> position on map
     Node *parent = nullptr; // parent node that this node expanded from
     int g = MAX_COST;
     int h = MAX_COST;
@@ -54,7 +54,7 @@ class AStar {
                  std::vector<std::vector<int>> &enviro_map);
         int search();
 
-        std::stack<std::vector<int>> computePath();
+        void computePath();
 
         void backTracePath();
 
