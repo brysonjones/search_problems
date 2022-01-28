@@ -43,7 +43,7 @@ bool AStar::isGoalExpanded(){
 }
 
 
-int AStar::getHeuristic(Node state){
+int AStar::getH(Node state){
     // use euclidean distance for now
     int dx_to_goal = abs(state.node_pose[0] - goal_state[0]);
     int dy_to_goal = abs(state.node_pose[1] - goal_state[1]);
@@ -53,16 +53,78 @@ int AStar::getHeuristic(Node state){
     return h_val;
 }
 
+int AStar::getG(std::vector<int> &state){
+    if (open_list_map.find(state) != open_list_map.end()){
+        return open_list_map[state].g;
+    }
+    return MAX_COST;
+}
+
+Node AStar::popOpenList(){
+    Node state = open_list.top();
+    closed_list[state.node_pose] = state;
+    open_list.pop();
+
+    return state;
+}
+
+void AStar::insertIntoOpenList(Node &current_state, Node &state_prime){
+    Node state = state_prime;
+    state.g = current_state.g + cost;
+    state.h = getH(state);
+    state.f = state.g + state.h;
+    open_list.push(state);
+
+}
+
 std::stack<std::vector<int>> AStar::computePath(){
+    Node current_state;
+    Node state_prime;
 
     // while(sgoal is not expanded and OPEN ≠ 0) -- done in setup fcn
     while(!isGoalExpanded() && !open_list.empty()){
-    // remove s with the smallest [f(s) = g(s)+h(s)] from OPEN;
-    // insert s into CLOSED;
-    // for every successor s’ of s such that s’ not in CLOSED
-        // if g(s’) > g(s) + c(s,s’)
-            // g(s’) = g(s) + c(s,s’);
-            // insert s’ into OPEN;
+        // remove s with the smallest [f(s) = g(s)+h(s)] from OPEN;
+        // insert s into CLOSED;
+        current_state = popOpenList();
+        // for every successor s’ of s such that s’ not in CLOSED
+        for (int i = 0; i < NUMOFDIRS; i++){
+            // update s' location
+            state_prime.node_pose[0] = current_state.node_pose[0] + dX[i];
+            state_prime.node_pose[1] = current_state.node_pose[1] + dY[i]; 
+            state_prime.parent = &closed_list[current_state.node_pose];
+            // if g(s’) > g(s) + c(s,s’)
+            if (closed_list.find(state_prime.node_pose) != closed_list.end() &&
+                getG(state_prime.node_pose) > current_state.g + cost){
+                // g(s’) = g(s) + c(s,s’);
+                // insert s’ into OPEN;
+                insertIntoOpenList(current_state, state_prime);
+            }
+        }
     }
 }
+
+void AStar::backTracePath(){
+        path.push(closed_list[goal_state].node_pose);
+        std::cout << "Pose - X: " << closed_list[goal_state].node_pose[0] 
+                  << ", Y: " << closed_list[goal_state].node_pose[1] << std::endl;
+
+        // init Node obj to iterate with
+        Node* mostRecentNode;
+        
+        mostRecentNode = closed_list[goal_state].parent;
+        
+        // push node to the top of the stack
+        path.push(mostRecentNode->node_pose);
+        std::cout << "Pose - X: " << mostRecentNode->node_pose[0] 
+                  << ", Y: " << mostRecentNode->node_pose[1] << std::endl;
+        
+        while (mostRecentNode->parent != nullptr){
+            // assign the parent of the mostRecentNode to become the Node
+            mostRecentNode = mostRecentNode->parent;
+            std::cout << "Pose - X: " << mostRecentNode->node_pose[0] 
+                  << ", Y: " << mostRecentNode->node_pose[1] << std::endl;
+            path.push(mostRecentNode->node_pose);
+        }
+        
+    }
  

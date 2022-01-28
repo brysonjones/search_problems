@@ -9,16 +9,19 @@
 #include <stack>
 #include <chrono>
 #include <math.h>
+#include <iostream>
 
 namespace aStar {
+
+int MAX_COST = INT_MAX;
 
 struct Node
 {
     std::vector<int> node_pose; // <x, y> position on map
-    Node *parent; // parent node that this node expanded from
-    int g = INT_MAX;
-    int h = INT_MAX;
-    int f = INT_MAX;
+    Node *parent = nullptr; // parent node that this node expanded from
+    int g = MAX_COST;
+    int h = MAX_COST;
+    int f = MAX_COST;
 };
 
 struct LessThanByF
@@ -50,7 +53,10 @@ class AStar {
         int setup(std::vector<int> robot_start_pose, std::vector<int> goal_pose, 
                  std::vector<std::vector<int>> &enviro_map);
         int search();
-        int main();
+
+        std::stack<std::vector<int>> computePath();
+
+        void backTracePath();
 
         // motion directions
         int NUMOFDIRS = 8;
@@ -65,8 +71,10 @@ class AStar {
     private:
         bool isStateValid(Node state);
         bool isGoalExpanded();
-        int getHeuristic(Node state);
-        std::stack<std::vector<int>> computePath();
+        int getH(Node state);
+        int getG(std::vector<int> &state);
+        Node popOpenList();
+        void insertIntoOpenList(Node &current_state, Node &state_prime);
     
         std::vector<int> initial_state;
         std::vector<int> goal_state;
@@ -74,6 +82,7 @@ class AStar {
 
         std::unordered_map<std::vector<int>, Node, VectorHasher> closed_list;
         std::priority_queue<Node, std::vector<Node>, LessThanByF> open_list;
+        std::unordered_map<std::vector<int>, Node, VectorHasher> open_list_map;
 
         // init stack for storing path
         std::stack<std::vector<int>> path;

@@ -14,8 +14,9 @@ int Planner::setup(std::vector<int> robot_pose, std::vector<int> goal_pose,
 }
 
 int Planner::main() {
-    // g(initial_state) = 0; all other g-values are infinite; OPEN = {sstart};
-    // ComputePath();
-    // publish solution;
+    
+    aStarSearch.computePath();
+    aStarSearch.backTracePath();
+
     return 0;
 }

@@ -13,6 +13,9 @@ class Planner {
         int search();
         int main();
 
+        std::stack<std::vector<int>> path;
+
+
     private:
         AStar aStarSearch{};
 
