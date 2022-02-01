@@ -10,7 +10,7 @@ int AStar::setup(std::vector<int> robot_start_pose, std::vector<int> goal_pose,
     // store start and goal poses
     initial_state = robot_start_pose;
     goal_state = goal_pose;
-    map = &enviro_map; // TOOD: verify this is storing the data properly
+    map = &enviro_map;  // TODO: verify this is storing the data properly
     x_size = map->size();
     y_size = map[0].size();
 
@@ -26,7 +26,6 @@ int AStar::setup(std::vector<int> robot_start_pose, std::vector<int> goal_pose,
     open_list.push(start_node);
     open_list_map[initial_state] = start_node;
 }
-
 
 bool AStar::isStateValid(Node state)
 { 
@@ -44,7 +43,6 @@ bool AStar::isGoalExpanded(){
         return false;
     }
 }
-
 
 int AStar::getH(Node state){
     // use euclidean distance for now
@@ -116,8 +114,8 @@ void AStar::computePath(){
 
 void AStar::backTracePath(){
         path.push_front(closed_list[goal_state].node_pose);
-        std::cout << "Pose - X: " << closed_list[goal_state].node_pose[0] 
-                  << ", Y: " << closed_list[goal_state].node_pose[1] << std::endl;
+        // std::cout << "Pose - X: " << closed_list[goal_state].node_pose[0] 
+        //           << ", Y: " << closed_list[goal_state].node_pose[1] << std::endl;
 
         // init Node obj to iterate with
         Node* mostRecentNode;
@@ -126,15 +124,11 @@ void AStar::backTracePath(){
         
         // push node to the top of the stack
         path.push_front(mostRecentNode->node_pose);
-        std::cout << "Pose - X: " << mostRecentNode->node_pose[0] 
-                << ", Y: " << mostRecentNode->node_pose[1] << std::endl;
         
         while (mostRecentNode->parent != nullptr){
             // assign the parent of the mostRecentNode to become the Node
             mostRecentNode = mostRecentNode->parent;
             path.push_front(mostRecentNode->node_pose);
-            std::cout << "Pose - X: " << mostRecentNode->node_pose[0] 
-                    << ", Y: " << mostRecentNode->node_pose[1] << std::endl;
         }
     }
  

@@ -41,8 +41,9 @@ int main(int argc, char** argv)
         else {break;}
         // simulator.robot.state[0] =  500*sin(glfwGetTime());
         // simulator.robot.state[1] =  500*cos(glfwGetTime());
-        sleep(0.05);
+        // sleep(0.01);
         simulator.moveRobot();
+        simulator.visualizer.renderPath();
     }
 
     // clean up resources
