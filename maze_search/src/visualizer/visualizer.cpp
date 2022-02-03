@@ -14,19 +14,23 @@ int Visualizer::setup(Robot robot) {
     shader.setup();
 
     // ************ LINE TESTING
-    glm::vec3 testPoint1 = glm::vec3(0,0,0);
-    glm::vec3 testPoint2 = glm::vec3(500,500,0);
-    line.setup(testPoint1, testPoint2);
+    glm::vec3 testPoint1 = glm::vec3(0.0f,0.0f,0.0f);
+    glm::vec3 testPoint2 = glm::vec3(1.0f,1.0f,0.0f);
+    glm::mat4 transform[10];
+    for(int i = 0; i < 10; i++)
+    {
+        glm::mat4 tmpTransform = glm::mat4(1.0f);
+        transform[i] = glm::translate(tmpTransform, glm::vec3((float)i*0.05, 0.0f, 0.0f));
+        std::cout << (float)i*0.05 << std::endl;
+        transform[i] = tmpTransform;
+    }  
 
-    glm::mat4 transform[100];
-    for(int i = 0; i < 100; i++)
-    {
-        transform[i] = glm::translate(transform[i], glm::vec3(i/400.0f, 0, 0.0f));
-    }  
-    for(unsigned int i = 0; i < 100; i++)
-    {
-        line.setTransform(("transform[" + std::to_string(i) + "]"), transform[i]);
-    }  
+    line.setup(testPoint1, testPoint2, transform);
+
+    // for(unsigned int i = 0; i < 10; i++)
+    // {
+    //     line.setTransform(transform[i]);
+    // }  
     // ************ LINE TESTING
 
     // set up shader object
