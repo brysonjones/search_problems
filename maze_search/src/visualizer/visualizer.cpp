@@ -20,8 +20,7 @@ int Visualizer::setup(Robot robot) {
     for(int i = 0; i < 10; i++)
     {
         glm::mat4 tmpTransform = glm::mat4(1.0f);
-        transform[i] = glm::translate(tmpTransform, glm::vec3((float)i*0.05, 0.0f, 0.0f));
-        std::cout << (float)i*0.05 << std::endl;
+        tmpTransform = glm::translate(tmpTransform, glm::vec3((float)i*0.05, 0.0f, 0.0f));
         transform[i] = tmpTransform;
     }  
 
@@ -54,7 +53,7 @@ int Visualizer::renderRobot(int x, int y, float theta){
     float xNormal = ((float)x) / (window.WINDOW_WIDTH / 2);
     float yNormal = ((float)y) / (window.WINDOW_HEIGHT / 2);
     bindVertex(robotShaderIndex);
-    graphics::transform_2D(xNormal, yNormal, theta, shader.ID);
+    graphics::transform_2D(xNormal, yNormal, theta, shader.ID); // TODO: shader.ID should not be public here
 }
 
 int Visualizer::renderPath(){

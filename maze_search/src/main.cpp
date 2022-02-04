@@ -31,7 +31,6 @@ int main(int argc, char** argv)
         if (simulator.visualizer.processRenderEvents()) {break;}
 
         // create transformations
-        // float theta = 0.1*tan(glfwGetTime());
         if (!planner.path.empty()){
             std::vector<int> state = planner.path.at(0);
             planner.path.pop_front();
@@ -39,8 +38,6 @@ int main(int argc, char** argv)
             simulator.robot.state[1] = state[1];
         }
         else {break;}
-        // simulator.robot.state[0] =  500*sin(glfwGetTime());
-        // simulator.robot.state[1] =  500*cos(glfwGetTime());
         sleep(0.01);
         simulator.moveRobot();
         simulator.visualizer.renderPath();
