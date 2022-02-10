@@ -13,24 +13,9 @@ int Visualizer::setup(Robot robot) {
     }
     shader.setup();
 
-    // ************ LINE TESTING
-    glm::vec3 testPoint1 = glm::vec3(0.0f,0.0f,0.0f);
-    glm::vec3 testPoint2 = glm::vec3(1.0f,1.0f,0.0f);
-    glm::mat4 transform[10];
-    for(int i = 0; i < 10; i++)
-    {
-        glm::mat4 tmpTransform = glm::mat4(1.0f);
-        tmpTransform = glm::translate(tmpTransform, glm::vec3((float)i*0.05, 0.0f, 0.0f));
-        transform[i] = tmpTransform;
-    }  
+    line.setup();
 
-    line.setup(testPoint1, testPoint2, transform);
-
-    // for(unsigned int i = 0; i < 10; i++)
-    // {
-    //     line.setTransform(transform[i]);
-    // }  
-    // ************ LINE TESTING
+    // ************ LINE TESTING 
 
     // set up shader object
     initObject(robot.vertices, sizeof(robot.vertices),

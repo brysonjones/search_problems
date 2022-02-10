@@ -12,7 +12,7 @@ enum ROBOT_COLORS {
 class Robot {
     public:
         Robot();
-        int setup(int initialX, int initialY, int color=RED); // "red", "green", "blue"
+        int setup(int initialX, int initialY, std::vector<int> map_size, int color=RED); // "red", "green", "blue"
         std::vector<int> state = {0}; // 1D, 2 values for (X, Y)
         float vertices[24] = {0}; // TODO: Make this initialization more modular
         unsigned int indices[6] = {
@@ -20,6 +20,7 @@ class Robot {
             1, 2, 3  // second triangle
         }; 
     private:
+        int size = 100;
 
 };
  

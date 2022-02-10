@@ -13,13 +13,16 @@
 int main(int argc, char** argv)
 {
 
+    // environment setup
+    std::vector<int> map_size = {1000, 1000};
+
     // init simulation
     Simulator simulator;
-    simulator.setup();
+    simulator.setup(map_size);
 
     std::vector<std::vector<int>> window_map(1000, std::vector<int>(1000));
     std::vector<int> robot_pose {0, 0};
-    std::vector<int> goal {500, 500};
+    std::vector<int> goal {250, 250};
     Planner planner;
     planner.setup(robot_pose, goal, window_map);
     planner.main();
@@ -38,8 +41,9 @@ int main(int argc, char** argv)
             simulator.robot.state[1] = state[1];
         }
         else {break;}
-        sleep(0.01);
+
         simulator.moveRobot();
+
         simulator.visualizer.renderPath();
     }
 

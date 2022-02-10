@@ -4,12 +4,12 @@
 // Member functions definitions including constructor
 Robot::Robot() {}
 
-int Robot::setup(int initialX, int initialY, int color) {
+int Robot::setup(int initialX, int initialY, std::vector<int> map_size, int color) {
     state[0] = initialX;
     state[1] = initialY;
 
-    std::vector<float> xOffset = {0.05, -0.05, 0.05, -0.05}; // TODO: Convert this to robot size attribute
-    std::vector<float> yOffset = {-0.05, -0.05, 0.05, 0.05};
+    std::vector<float> xOffset = {(float)size/map_size[0], -(float)size/map_size[0], (float)size/map_size[0], -(float)size/map_size[0]}; // TODO: Convert this to robot size attribute
+    std::vector<float> yOffset = {-(float)size/map_size[1], -(float)size/map_size[1], (float)size/map_size[1], (float)size/map_size[1]};
 
     // TODO: create general function for vertex generation, maybe in opengl tools library?
     for (int i=0; i<4; i++){

@@ -20,12 +20,13 @@ class Visualizer {
         void cleanUpResources();
 
         int robotShaderIndex = 0;
-        int envShaderIndex = 1;
+        int envShaderIndex = 1;      
+        Line line;
+
 
     private:
         Window window;
         Shader shader; 
-        Line line;
 
         void bindVertex(int index);
 

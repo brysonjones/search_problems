@@ -6,9 +6,9 @@ Simulator::Simulator() {
     
 }
 
-int Simulator::setup() {
+int Simulator::setup(std::vector<int> map_size) {
     // create robot
-    robot.setup(0, 0, GREEN);
+    robot.setup(0, 0, map_size, GREEN);
 
     visualizer.setup(robot);
 

@@ -4,10 +4,17 @@
 #include "robot/robot.hpp"
 #include "visualizer/visualizer.hpp"
 
+struct Obstacle
+{
+    std::vector<int> pose = {0, 0}; // <x, y> position on map
+    int height = 100;
+    int width = 100;
+};
+
 class Simulator {
     public:
         Simulator();
-        int setup();
+        int setup(std::vector<int> map_size);
         int moveRobot();
 
         Robot robot{};
