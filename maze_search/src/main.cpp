@@ -7,7 +7,6 @@
 #include "graphics/graphics.hpp"
 
 // internal imports
-#include "planner/searchAlgorithm/searchAlgorithm.hpp"
 #include "simulator/simulator.hpp"
 
 int main(int argc, char** argv)
@@ -15,36 +14,23 @@ int main(int argc, char** argv)
 
     // environment setup
     std::vector<int> map_size = {1000, 1000};
+    std::vector<int> map_bounds = {-500, 500, -500, 500};
+    std::vector<int> robot_pose {0, 0};
+    std::vector<int> goal {250, 250};
 
     // init simulation
     Simulator simulator;
-    simulator.setup(map_size);
-
-    std::vector<std::vector<int>> window_map(1000, std::vector<int>(1000));
-    std::vector<int> robot_pose {0, 0};
-    std::vector<int> goal {250, 250};
-    Planner planner;
-    planner.setup(robot_pose, goal, window_map);
-    planner.main();
-
+    simulator.setup(map_size, map_bounds);
+    simulator.robot.initPlanner(goal, map_bounds);
     // render loop
     // -----------
     while(true){
 
         if (simulator.visualizer.processRenderEvents()) {break;}
 
-        // create transformations
-        if (!planner.path.empty()){
-            std::vector<int> state = planner.path.at(0);
-            planner.path.pop_front();
-            simulator.robot.state[0] = state[0];
-            simulator.robot.state[1] = state[1];
-        }
-        else {break;}
-
         simulator.moveRobot();
 
-        simulator.visualizer.renderPath();
+        // simulator.visualizer.renderPath();
     }
 
     // clean up resources

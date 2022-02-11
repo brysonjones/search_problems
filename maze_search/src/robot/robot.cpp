@@ -5,11 +5,13 @@
 Robot::Robot() {}
 
 int Robot::setup(int initialX, int initialY, std::vector<int> map_size, int color) {
-    state[0] = initialX;
-    state[1] = initialY;
+    state.push_back(initialX);
+    state.push_back(initialY);
 
-    std::vector<float> xOffset = {(float)size/map_size[0], -(float)size/map_size[0], (float)size/map_size[0], -(float)size/map_size[0]}; // TODO: Convert this to robot size attribute
-    std::vector<float> yOffset = {-(float)size/map_size[1], -(float)size/map_size[1], (float)size/map_size[1], (float)size/map_size[1]};
+    std::vector<float> xOffset = {(float)(size/2)/map_size[0], -(float)(size/2)/map_size[0], 
+                                    (float)(size/2)/map_size[0], -(float)(size/2)/map_size[0]}; // TODO: Convert this to robot size attribute
+    std::vector<float> yOffset = {-(float)(size/2)/map_size[1], -(float)(size/2)/map_size[1],   
+                                    (float)(size/2)/map_size[1], (float)(size/2)/map_size[1]};
 
     // TODO: create general function for vertex generation, maybe in opengl tools library?
     for (int i=0; i<4; i++){
@@ -23,7 +25,29 @@ int Robot::setup(int initialX, int initialY, std::vector<int> map_size, int colo
         }    
         else if (color == BLUE){
             vertices[5 + i*6] = 1.0;
-    }
+        }
 
     }
+
+}
+
+int Robot::initPlanner(std::vector<int> goal_pose, std::vector<int> map_bounds){
+    planner.setup(state, goal_pose, map_bounds);
+    planner.main();
+}
+
+int Robot::updatePlan(){
+    planner.updatePosition(state);
+    planner.main();
+
+    return 0;
+}
+
+int Robot::move(){
+    state = planner.path->at(0);
+
+    std::cout << "state: " << state[0] << ", " << state[1] << std::endl;
+    planner.path->pop_front();
+
+    return 0;
 }

@@ -25,12 +25,11 @@ if(NOT oglt_repoo_POPULATED)
 endif()
 
 add_subdirectory(src)
-# include_directories(src)
+include_directories(src)
 
 add_executable(main src/main.cpp)
 
 target_link_libraries(main
-                      searchAlgorithm
                       simulator)
 
 set_target_properties(main

@@ -14,13 +14,14 @@ struct Obstacle
 class Simulator {
     public:
         Simulator();
-        int setup(std::vector<int> map_size);
+        int setup(std::vector<int> map_size, std::vector<int> map_bounds);
         int moveRobot();
 
         Robot robot{};
         Visualizer visualizer{};
 
     private:
+        std::vector<Obstacle> obstacles;
 
 };
  

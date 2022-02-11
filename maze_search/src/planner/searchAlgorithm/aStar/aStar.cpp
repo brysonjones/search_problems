@@ -4,36 +4,57 @@
 
 AStar::AStar() {}
 
-int AStar::setup(std::vector<int> robot_start_pose, std::vector<int> goal_pose, 
-                 std::vector<std::vector<int>> &enviro_map) {
+int AStar::setup(std::vector<int> robot_pose, std::vector<int> goal_pose, std::vector<int> map_bounds) {
     
     // store start and goal poses
-    initial_state = robot_start_pose;
+    current_state = robot_pose;
     goal_state = goal_pose;
-    map = &enviro_map;  // TODO: verify this is storing the data properly
-    x_size = map->size();
-    y_size = map[0].size();
+
+    // store map info
+    x_bounds.push_back(map_bounds[0]);
+    x_bounds.push_back(map_bounds[1]);
+    y_bounds.push_back(map_bounds[2]);
+    y_bounds.push_back(map_bounds[3]);
 
     // initialize the starting node of the robot
     Node start_node;
     start_node.parent = nullptr;
-    start_node.node_pose = {initial_state[0], initial_state[1]};
+    start_node.node_pose = {current_state[0], current_state[1]};
     start_node.g = 0;
     start_node.h = 0;
     start_node.f = 0;
 
     // push the start node to the open list
     open_list.push(start_node);
-    open_list_map[initial_state] = start_node;
+    open_list_map[current_state] = start_node;
+}
+
+int AStar::resetSearch() {
+    // ensure all lists are clear
+    open_list = std::priority_queue<Node, std::vector<Node>, LessThanByF>();
+    open_list_map.clear();
+    closed_list.clear();
+
+    // initialize the starting node of the robot
+    Node start_node;
+    start_node.parent = nullptr;
+    start_node.node_pose = {current_state[0], current_state[1]};
+    start_node.g = 0;
+    start_node.h = 0;
+    start_node.f = 0;
+
+    // push the start node to the open list
+    open_list.push(start_node);
+    open_list_map[current_state] = start_node;
 }
 
 bool AStar::isStateValid(Node state)
 { 
     // Returns true if x and y of s_prime is in range 
-    return ((state.node_pose[0] >= 0) && 
-            (state.node_pose[0] <= x_size) && 
-            (state.node_pose[1] >= 0) && 
-            (state.node_pose[1] <= y_size)); 
+    return ((state.node_pose[0] >= x_bounds[0]) && 
+            (state.node_pose[0] <= x_bounds[1]) && 
+            (state.node_pose[1] >= y_bounds[0]) && 
+            (state.node_pose[1] <= y_bounds[1])); 
 } 
 
 bool AStar::isGoalExpanded(){
@@ -125,7 +146,7 @@ void AStar::backTracePath(){
         // push node to the top of the stack
         path.push_front(mostRecentNode->node_pose);
         
-        while (mostRecentNode->parent != nullptr){
+        while (mostRecentNode->parent->parent != nullptr){
             // assign the parent of the mostRecentNode to become the Node
             mostRecentNode = mostRecentNode->parent;
             path.push_front(mostRecentNode->node_pose);

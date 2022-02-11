@@ -14,7 +14,7 @@
 
 namespace aStar {
 
-int MAX_COST = INT_MAX;
+static int MAX_COST = INT_MAX;
 
 struct Node
 {
@@ -51,9 +51,10 @@ using namespace aStar;
 class AStar {
     public:
         AStar();
-        int setup(std::vector<int> robot_start_pose, std::vector<int> goal_pose, 
-                 std::vector<std::vector<int>> &enviro_map);
+        int setup(std::vector<int> robot_start_pose, std::vector<int> goal_pose, std::vector<int> map_bounds);
         int search();
+
+        int resetSearch();
 
         void computePath();
 
@@ -65,9 +66,12 @@ class AStar {
         int dY[8] = {-1,  0,  1, -1,  1, -1, 0, 1};
 
         // map variables
-        int x_size = 0;
-        int y_size = 0;
+        std::vector<int> x_bounds;
+        std::vector<int> y_bounds;
         int cost = 1;
+
+        std::vector<int> current_state;
+        std::vector<int> goal_state;
 
         // init stack for storing path
         std::deque<std::vector<int>> path;
@@ -80,10 +84,6 @@ class AStar {
         int getG(std::vector<int> &state);
         Node popOpenList();
         void insertIntoOpenList(Node &current_state, Node &state_prime);
-    
-        std::vector<int> initial_state;
-        std::vector<int> goal_state;
-        std::vector<std::vector<int>> *map;
 
         std::unordered_map<std::vector<int>, Node, VectorHasher> closed_list;
         std::priority_queue<Node, std::vector<Node>, LessThanByF> open_list;
