@@ -34,6 +34,7 @@ int AStar::resetSearch() {
     open_list = std::priority_queue<Node, std::vector<Node>, LessThanByF>();
     open_list_map.clear();
     closed_list.clear();
+    path.clear();
 
     // initialize the starting node of the robot
     Node start_node;
@@ -63,6 +64,8 @@ bool AStar::isGoalExpanded(){
     {
         return false;
     }
+
+    return true;
 }
 
 int AStar::getH(Node state){
@@ -86,6 +89,7 @@ Node AStar::popOpenList(){
     Node state = open_list.top();
     closed_list[state.node_pose] = state;
     open_list.pop();
+    open_list_map.erase(state.node_pose);
 
     return state;
 }
@@ -101,32 +105,39 @@ void AStar::insertIntoOpenList(Node &current_state, Node &state_prime){
 }
 
 void AStar::computePath(){
-    Node current_state;
+    Node current_state_node;
     Node state_prime;
+
+    // std::cout << "Open List Size: " << open_list.size() << std::endl;
+    // std::cout << "Open List Map Size: " << open_list_map.size() << std::endl;
+    // std::cout << "Closed List Size: " << closed_list.size() << std::endl;
+
 
     // while(sgoal is not expanded and OPEN ≠ 0) -- done in setup fcn
     while(!isGoalExpanded() && !open_list.empty()){
         // remove s with the smallest [f(s) = g(s)+h(s)] from OPEN;
         // insert s into CLOSED;
-        current_state = popOpenList();
+        current_state_node = popOpenList();
 
-        // std::cout << "Current State - X: " << current_state.node_pose[0] 
-        //         << ", Y: " << current_state.node_pose[1] << std::endl;
+        // std::cout << "Current State - X: " << current_state_node.node_pose[0] 
+        //         << ", Y: " << current_state_node.node_pose[1] 
+        //         << ", G-Value: " << current_state_node.g 
+        //         << ", H-Value: " << current_state_node.h << std::endl;
 
         // for every successor s’ of s such that s’ not in CLOSED
         for (int i = 0; i < NUMOFDIRS; i++){
             // update s' location
             // std::cout << state_prime.node_pose[0] << "\n";
-            state_prime.node_pose[0] = current_state.node_pose[0] + dX[i];
-            state_prime.node_pose[1] = current_state.node_pose[1] + dY[i]; 
-            state_prime.parent = &closed_list[current_state.node_pose];
+            state_prime.node_pose[0] = current_state_node.node_pose[0] + dX[i];
+            state_prime.node_pose[1] = current_state_node.node_pose[1] + dY[i]; 
+            state_prime.parent = &closed_list[current_state_node.node_pose];
             if (!isStateValid(state_prime)){continue;}
             // if g(s’) > g(s) + c(s,s’)
             if (closed_list.find(state_prime.node_pose) == closed_list.end() &&
-                getG(state_prime.node_pose) > current_state.g + cost){
+                getG(state_prime.node_pose) > current_state_node.g + cost){
                 // g(s’) = g(s) + c(s,s’);
                 // insert s’ into OPEN;
-                insertIntoOpenList(current_state, state_prime); 
+                insertIntoOpenList(current_state_node, state_prime); 
             }
         }
     }
