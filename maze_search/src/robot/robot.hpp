@@ -20,9 +20,9 @@ class Robot {
         const std::deque<std::vector<int>>* getPlan();
         int move();
 
-        std::vector<int> state; // 1D, 2 values for (X, Y)
-        float vertices[24] = {0}; // TODO: Make this initialization more modular
-        unsigned int indices[6] = {
+        std::vector<int> state;  // 1D, 2 values for (X, Y)
+        std::vector<float> vertices;  // TODO: Make this initialization more modular
+        std::vector<unsigned int> indices = {
             0, 1, 2, // first triangle
             1, 2, 3  // second triangle
         }; 

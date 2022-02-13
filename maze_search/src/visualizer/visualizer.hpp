@@ -13,7 +13,7 @@ class Visualizer {
         Visualizer();
 
         int setup(Robot robot, std::vector<int> map_bounds);
-        int initObject(float vertices[], int verticesSize, unsigned int indices[], int indicesSize, int shaderIndex);
+        int initObject(std::vector<float> vertices, std::vector<unsigned int> indices, int shaderIndex);
         int processRenderEvents();
         int renderRobot(int x, int y, float theta);
         int renderPath(const std::deque<std::vector<int>> &path);

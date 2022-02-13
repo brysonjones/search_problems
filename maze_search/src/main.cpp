@@ -16,7 +16,7 @@ int main(int argc, char** argv)
     std::vector<int> map_size = {1000, 1000};
     std::vector<int> map_bounds = {-500, 500, -500, 500};
     std::vector<int> robot_pose {0, 0};
-    std::vector<int> goal {150, 350};
+    std::vector<int> goal {190, 420};
 
     // init simulation
     Simulator simulator;
@@ -29,8 +29,6 @@ int main(int argc, char** argv)
         if (simulator.visualizer.processRenderEvents()) {break;}
 
         simulator.moveRobot();
-
-        // simulator.visualizer.renderPath();
     }
 
     // clean up resources

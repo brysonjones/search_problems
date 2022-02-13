@@ -18,16 +18,14 @@ int Visualizer::setup(Robot robot, std::vector<int> map_bounds) {
     _map_bounds = map_bounds;
 
     // set up shader object
-    initObject(robot.vertices, sizeof(robot.vertices),
-               robot.indices, sizeof(robot.indices), robotShaderIndex);
+    initObject(robot.vertices, robot.indices, robotShaderIndex);
     
     return 0;
 
 }
 
-int Visualizer::initObject(float vertices[], int verticesSize, 
-                           unsigned int indices[], int indicesSize, int shaderIndex){
-    shader.setup_shader_program(vertices, verticesSize, indices, indicesSize, shaderIndex);
+int Visualizer::initObject(std::vector<float> vertices, std::vector<unsigned int> indices, int shaderIndex){
+    shader.initShader(vertices, indices, shaderIndex);
 }
 
 int Visualizer::processRenderEvents(){
@@ -42,6 +40,8 @@ int Visualizer::renderRobot(int x, int y, float theta){
 }
 
 int Visualizer::renderPath(const std::deque<std::vector<int>> &path){
+    
+    // take points in path and put them into single vector array for OpenGL context
     std::vector<float> pathRenderingVec;
     for (int i=0; i<path.size(); i++){
         const std::vector<int> *state = &path[i];
@@ -50,10 +50,12 @@ int Visualizer::renderPath(const std::deque<std::vector<int>> &path){
         pathRenderingVec.push_back(0.0f);
     }
     line.updatePos(pathRenderingVec);
+    // transform here is an identity matrix, so no transform is applied
     glm::mat4 tmpTransform = glm::mat4(1.0f);
     std::vector<glm::mat4> transformVector;
     transformVector.push_back(tmpTransform);
     line.updateTransform(transformVector);
+    line.setColor(glm::vec3(0,1,0));
     line.draw();
 }
 

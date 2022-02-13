@@ -7,8 +7,8 @@
 struct Obstacle
 {
     std::vector<int> pose = {0, 0}; // <x, y> position on map
-    int height = 100;
-    int width = 100;
+    int height = 100;  // in units of grid-cells
+    int width = 100;  // in units of grid-cells
 };
 
 class Simulator {
@@ -16,6 +16,7 @@ class Simulator {
         Simulator();
         int setup(std::vector<int> map_size, std::vector<int> map_bounds);
         int moveRobot();
+        int updateObstacles();
 
         Robot robot{};
         Visualizer visualizer{};

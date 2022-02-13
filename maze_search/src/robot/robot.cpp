@@ -14,6 +14,8 @@ int Robot::setup(int initialX, int initialY, std::vector<int> map_size, int colo
                                     (float)(size/2)/map_size[1], (float)(size/2)/map_size[1]};
 
     // TODO: create general function for vertex generation, maybe in opengl tools library?
+    std::vector<float> initVec(24, 0);
+    vertices = initVec;
     for (int i=0; i<4; i++){
         vertices[0 + i*6] = state[0] + xOffset[i];
         vertices[1 + i*6] = state[1] + yOffset[i];
@@ -50,8 +52,6 @@ const std::deque<std::vector<int>>* Robot::getPlan(){
 
 int Robot::move(){
     state = planner.path->at(0);
-
-    std::cout << "state: " << state[0] << ", " << state[1] << std::endl;
     planner.path->pop_front();
 
     return 0;
