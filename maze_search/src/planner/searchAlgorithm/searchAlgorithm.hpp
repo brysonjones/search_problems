@@ -12,6 +12,7 @@ class Planner {
         int search();
         int main();
         int updatePosition(std::vector<int> robot_pose);
+        int updateGoal(std::vector<int> goal_state);
 
         std::deque<std::vector<int>> *path;
 

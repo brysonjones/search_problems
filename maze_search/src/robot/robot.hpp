@@ -17,6 +17,7 @@ class Robot {
         int setup(int initialX, int initialY, std::vector<int> map_size, int color=RED); // "red", "green", "blue"
         int initPlanner(std::vector<int> goal_pose, std::vector<int> map_bounds);
         int updatePlan();
+        int updateGoal(std::vector<int> goal);
         const std::deque<std::vector<int>>* getPlan();
         int move();
 

@@ -29,3 +29,10 @@ int Planner::updatePosition(std::vector<int> robot_pose){
 
     aStarSearch.resetSearch(); // TODO: probably move this to another place?
 }
+
+int Planner::updateGoal(std::vector<int> goal_state){
+    aStarSearch.goal_state[0] = goal_state[0];
+    aStarSearch.goal_state[1] = goal_state[1];
+
+    aStarSearch.resetSearch(); // TODO: probably move this to another place?
+}

@@ -45,6 +45,12 @@ int Robot::updatePlan(){
     return 0;
 }
 
+int Robot::updateGoal(std::vector<int> goal){
+    planner.updateGoal(goal);
+    planner.main();
+
+    return 0;
+}
 
 const std::deque<std::vector<int>>* Robot::getPlan(){
     return planner.path;

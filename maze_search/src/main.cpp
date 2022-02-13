@@ -25,10 +25,19 @@ int main(int argc, char** argv)
     // render loop
     // -----------
     while(true){
-
         if (simulator.visualizer.processRenderEvents()) {break;}
-
         simulator.moveRobot();
+
+        int dx_to_goal = abs(simulator.robot.state[0] - goal[0]);
+        int dy_to_goal = abs(simulator.robot.state[1] - goal[1]);
+                
+        int dist_to_goal = sqrt((dx_to_goal * dx_to_goal) + (dy_to_goal * dy_to_goal));
+
+        if (dist_to_goal < 10){
+            goal[0] = -190;
+            goal[0] = -420;
+            simulator.robot.updateGoal(goal);
+        }
     }
 
     // clean up resources
