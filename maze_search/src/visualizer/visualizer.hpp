@@ -12,11 +12,11 @@ class Visualizer {
     public:
         Visualizer();
 
-        int setup(Robot robot);
+        int setup(Robot robot, std::vector<int> map_bounds);
         int initObject(float vertices[], int verticesSize, unsigned int indices[], int indicesSize, int shaderIndex);
         int processRenderEvents();
         int renderRobot(int x, int y, float theta);
-        int renderPath();
+        int renderPath(const std::deque<std::vector<int>> &path);
         void cleanUpResources();
 
         int robotShaderIndex = 0;
@@ -25,6 +25,7 @@ class Visualizer {
 
 
     private:
+        std::vector<int> _map_bounds;
         Window window;
         Shader shader; 
 

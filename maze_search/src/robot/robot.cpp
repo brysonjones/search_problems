@@ -43,6 +43,11 @@ int Robot::updatePlan(){
     return 0;
 }
 
+
+const std::deque<std::vector<int>>* Robot::getPlan(){
+    return planner.path;
+}
+
 int Robot::move(){
     state = planner.path->at(0);
 
