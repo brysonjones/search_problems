@@ -11,6 +11,9 @@
 #include <chrono>
 #include <math.h>
 #include <iostream>
+#include <memory.h>
+
+#include "environment/environment.hpp"
 
 namespace aStar {
 
@@ -51,7 +54,8 @@ using namespace aStar;
 class AStar {
     public:
         AStar();
-        int setup(std::vector<int> robot_start_pose, std::vector<int> goal_pose, std::vector<int> map_bounds);
+        int setup(std::vector<int> robot_start_pose, std::vector<int> goal_pose, 
+                  std::vector<int> map_bounds, std::vector<Obstacle> *obstacles);
         int search();
 
         int resetSearch();
@@ -79,12 +83,16 @@ class AStar {
 
     private:
         bool isStateValid(Node state);
+        int updateMap();
+        bool isStateObstacle(Node state);
         bool isGoalExpanded();
         int getH(Node state);
         int getG(std::vector<int> &state);
         Node popOpenList();
         void insertIntoOpenList(Node &current_state, Node &state_prime);
 
+        std::vector<Obstacle> *_obstacles;
+        int map[1000][1000] = {0};
         std::unordered_map<std::vector<int>, Node, VectorHasher> closed_list;
         std::priority_queue<Node, std::vector<Node>, LessThanByF> open_list;
         std::unordered_map<std::vector<int>, Node, VectorHasher> open_list_map;

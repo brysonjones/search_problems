@@ -2,30 +2,28 @@
 #include "visualizer.hpp"
 
 // Member functions definitions including constructor
-Visualizer::Visualizer() {
-}
+Visualizer::Visualizer() {}
 
-int Visualizer::setup(Robot robot, std::vector<int> map_bounds) {
-    
+int Visualizer::setup(Robot robot, std::vector<Obstacle> obstacles, std::vector<int> map_bounds) {
     // glfw window creation
     if (window.setup()){
         return 1;
     }
-    shader.setup();
+    robotShader.setup();
+    std::vector<int> map_size = {map_bounds[1] - map_bounds[0],
+                                 map_bounds[3] - map_bounds[2]};
+    std::vector<float> robotVertices = graphics::generateVertices(robot.state, robot.dims, map_size, graphics::BLUE);
 
+    robotShader.initShader(robotVertices, robotShaderIndex);
+
+    obstacleShader.setup();
+    std::vector<float> obstacleVertices = graphics::generateVertices(obstacles[0].state, obstacles[0].dims, map_size, graphics::RED);
+    obstacleShader.initShader(obstacleVertices, obstacleShaderIndex);
     line.setup();
 
     _map_bounds = map_bounds;
-
-    // set up shader object
-    initObject(robot.vertices, robot.indices, robotShaderIndex);
     
     return 0;
-
-}
-
-int Visualizer::initObject(std::vector<float> vertices, std::vector<unsigned int> indices, int shaderIndex){
-    shader.initShader(vertices, indices, shaderIndex);
 }
 
 int Visualizer::processRenderEvents(){
@@ -33,10 +31,21 @@ int Visualizer::processRenderEvents(){
 }
 
 int Visualizer::renderRobot(int x, int y, float theta){
-    float xNormal = ((float)x) / (window.WINDOW_WIDTH / 2); // TODO: change this to map size variable
-    float yNormal = ((float)y) / (window.WINDOW_HEIGHT / 2); // TODO: change this to map size variable
-    bindVertex(robotShaderIndex);
-    graphics::transform_2D(xNormal, yNormal, theta, shader.ID); // TODO: shader.ID should not be public here
+    // TODO: Try to move this normalization step to inside OpenGL tools library
+    float xNormal = ((float)x) / ((_map_bounds[1] - _map_bounds[0])/2);  // TODO: change this to map size variable
+    float yNormal = ((float)y) / ((_map_bounds[3] - _map_bounds[2])/2);  // TODO: change this to map size variable
+    robotShader.bindVertex();
+    robotShader.setTransform2D(xNormal, yNormal, theta);
+    robotShader.draw();
+}
+
+int Visualizer::renderObstacles(int x, int y){
+    // TODO: Try to move this normalization step to inside OpenGL tools library
+    float xNormal = ((float)x) / ((_map_bounds[1] - _map_bounds[0])/2);  // TODO: change this to map size variable
+    float yNormal = ((float)y) / ((_map_bounds[3] - _map_bounds[2])/2);  // TODO: change this to map size variable
+    obstacleShader.bindVertex();
+    obstacleShader.setTransform2D(xNormal, yNormal, 0);  // not capable of rotating right now due to mapping logic
+    obstacleShader.draw();
 }
 
 int Visualizer::renderPath(const std::deque<std::vector<int>> &path){
@@ -59,19 +68,10 @@ int Visualizer::renderPath(const std::deque<std::vector<int>> &path){
     line.draw();
 }
 
-void Visualizer::bindVertex(int index){
-    glBindVertexArray(shader.VAO_vec[index]);
-    shader.use();
-}
-
 void Visualizer::cleanUpResources(){
     
     // de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
-    while(shader.VAO_vec.size() > 0){
-        shader.delete_vertex_array(0);
-    }
-
     line.~Line();
 
     // glfw: terminate, clearing all previously allocated GLFW resources.

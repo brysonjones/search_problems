@@ -4,6 +4,9 @@ set (CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Release)
 # set(CMAKE_POSITION_INDEPENDENT_CODE ON) # TODO: Change OGLT library to be Position Independent instead of this. This makes the code less efficient
 
+add_compile_options(-fsanitize=address)
+add_link_options(-fsanitize=address)
+
 include(FetchContent)
 enable_testing()
 

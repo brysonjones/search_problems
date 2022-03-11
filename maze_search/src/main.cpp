@@ -16,10 +16,10 @@ int main(int argc, char** argv)
     std::vector<int> map_size = {1000, 1000};
     std::vector<int> map_bounds = {-500, 500, -500, 500};
     std::vector<int> robot_pose {0, 0};
-    std::vector<int> goal {190, 420};
+    std::vector<int> goal {250, 420};
 
     // init simulation
-    Simulator simulator;
+    static Simulator simulator;  // TODO :Research more why making this static was important -- too much memory on stack?
     simulator.setup(map_size, map_bounds);
     simulator.robot.initPlanner(goal, map_bounds);
     // render loop
@@ -27,6 +27,7 @@ int main(int argc, char** argv)
     while(true){
         if (simulator.visualizer.processRenderEvents()) {break;}
         simulator.moveRobot();
+        simulator.updateObstacles();
 
         int dx_to_goal = abs(simulator.robot.state[0] - goal[0]);
         int dy_to_goal = abs(simulator.robot.state[1] - goal[1]);
@@ -34,8 +35,8 @@ int main(int argc, char** argv)
         int dist_to_goal = sqrt((dx_to_goal * dx_to_goal) + (dy_to_goal * dy_to_goal));
 
         if (dist_to_goal < 10){
-            goal[0] = -190;
-            goal[0] = -420;
+            goal[0] = 0;
+            goal[1] = 0;
             simulator.robot.updateGoal(goal);
         }
     }

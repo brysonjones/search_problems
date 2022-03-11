@@ -5,12 +5,10 @@
 Planner::Planner(void) {
 }
 
-int Planner::setup(std::vector<int> robot_pose, std::vector<int> goal_pose, std::vector<int> map_bounds) {
-                       
-    aStarSearch.setup(robot_pose, goal_pose, map_bounds);
-    
+int Planner::setup(std::vector<int> robot_pose, std::vector<int> goal_pose, 
+                   std::vector<int> map_bounds, std::vector<Obstacle> *obstacles) {             
+    aStarSearch.setup(robot_pose, goal_pose, map_bounds, obstacles);
     return 0;
-
 }
 
 int Planner::main() {
