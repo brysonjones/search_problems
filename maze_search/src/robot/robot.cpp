@@ -4,12 +4,10 @@
 // Member functions definitions including constructor
 Robot::Robot() {}
 
-int Robot::setup(int initialX, int initialY, 
+int Robot::setup(std::vector<int> initial_state,
                  std::vector<int> map_size, 
                  std::vector<Obstacle> *obstacles) {
-    state.push_back(initialX);
-    state.push_back(initialY);
-
+    state = initial_state;
     _obstacles = obstacles;
 }
 

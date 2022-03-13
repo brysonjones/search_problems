@@ -8,7 +8,7 @@
 class Simulator {
     public:
         Simulator();
-        int setup(std::vector<int> map_size, std::vector<int> map_bounds);
+        int setup(std::vector<int> initial_robot_state, std::vector<int> map_size, std::vector<int> map_bounds);
         int moveRobot();
         int updateObstacles();
         int updateMap();

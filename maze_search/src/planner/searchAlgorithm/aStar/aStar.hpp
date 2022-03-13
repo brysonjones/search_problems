@@ -21,7 +21,7 @@ static int MAX_COST = INT_MAX;
 
 struct Node
 {
-    std::vector<int> node_pose = {0, 0}; // <x, y> position on map
+    std::vector<int> node_pose = {0, 0, 0}; // <x, y, theta> position on map
     Node *parent = nullptr; // parent node that this node expanded from
     int g = MAX_COST;
     int h = MAX_COST;
@@ -68,10 +68,12 @@ class AStar {
         int NUMOFDIRS = 8;
         int dX[8] = {-1, -1, -1,  0,  0,  1, 1, 1};
         int dY[8] = {-1,  0,  1, -1,  1, -1, 0, 1};
+        int dTheta[8] = {0, 0, 0, 0, 0, 0, 0, 0}; // HACK: Temp to test 3D search
 
         // map variables
         std::vector<int> x_bounds;
         std::vector<int> y_bounds;
+        std::vector<int> theta_bounds = {0, 359}; // HACK: should probably be defined in robot
         int cost = 1;
 
         std::vector<int> current_state;

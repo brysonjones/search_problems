@@ -32,6 +32,11 @@ include_directories(src)
 
 add_executable(main src/main.cpp)
 
+# HACK: Change the way this file gets placed 
+#       Could generate it on build with the python script?
+file(COPY src/motion_prim_gen/motion_prim.csv
+          DESTINATION ${CMAKE_BINARY_DIR}/bin/Release)
+
 target_link_libraries(main
                       simulator)
 

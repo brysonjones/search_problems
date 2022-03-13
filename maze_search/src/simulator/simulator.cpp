@@ -4,7 +4,8 @@
 // Member functions definitions including constructor
 Simulator::Simulator() {}
 
-int Simulator::setup(std::vector<int> map_size, std::vector<int> map_bounds) {
+int Simulator::setup(std::vector<int> initial_robot_state, std::vector<int> map_size, 
+                     std::vector<int> map_bounds) {
     _map_bounds = map_bounds;
 
     // init obstacles
@@ -14,7 +15,7 @@ int Simulator::setup(std::vector<int> map_size, std::vector<int> map_bounds) {
     obstacles.push_back(obstacle);
 
     // create robot
-    robot.setup(0, 0, map_size, &obstacles);
+    robot.setup(initial_robot_state, map_size, &obstacles);
 
     visualizer.setup(robot, obstacles, map_bounds);
 

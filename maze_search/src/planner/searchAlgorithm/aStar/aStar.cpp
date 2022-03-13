@@ -23,7 +23,7 @@ int AStar::setup(std::vector<int> robot_pose, std::vector<int> goal_pose,
     // initialize the starting node of the robot
     Node start_node;
     start_node.parent = nullptr;
-    start_node.node_pose = {current_state[0], current_state[1]};
+    start_node.node_pose = {current_state[0], current_state[1], current_state[2]};
     start_node.g = 0;
     start_node.h = 0;
     start_node.f = 0;
@@ -47,7 +47,7 @@ int AStar::resetSearch() {
     // initialize the starting node of the robot
     Node start_node;
     start_node.parent = nullptr;
-    start_node.node_pose = {current_state[0], current_state[1]};
+    start_node.node_pose = {current_state[0], current_state[1], current_state[2]};
     start_node.g = 0;
     start_node.h = 0;
     start_node.f = 0;
@@ -101,9 +101,12 @@ int AStar::getH(Node state){
     // use euclidean distance for now
     int dx_to_goal = abs(state.node_pose[0] - goal_state[0]);
     int dy_to_goal = abs(state.node_pose[1] - goal_state[1]);
+    int dtheta_to_goal = abs(state.node_pose[2] - goal_state[2]);
     
     int weight = 10;  // heuristic weighting
-    int h_val = weight * sqrt((dx_to_goal * dx_to_goal) + (dy_to_goal * dy_to_goal));
+    int h_val = weight * sqrt((dx_to_goal * dx_to_goal) 
+                              + (dy_to_goal * dy_to_goal) 
+                              + (dtheta_to_goal * dtheta_to_goal));
 
     return h_val;
 }
@@ -146,7 +149,6 @@ void AStar::computePath(){
         // for every successor s’ of s such that s’ not in CLOSED
         for (int i = 0; i < NUMOFDIRS; i++){
             // update s' location
-            // std::cout << state_prime.node_pose[0] << "\n";
             state_prime.node_pose[0] = current_state_node.node_pose[0] + dX[i];
             state_prime.node_pose[1] = current_state_node.node_pose[1] + dY[i]; 
             state_prime.parent = &closed_list[current_state_node.node_pose];
