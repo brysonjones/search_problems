@@ -25,7 +25,7 @@ int Simulator::setup(std::vector<int> initial_robot_state, std::vector<int> map_
 int Simulator::moveRobot(){
     robot.move();
     robot.updatePlan();
-    visualizer.renderRobot(robot.state[0], robot.state[1], 0);
+    visualizer.renderRobot(robot.state[0], robot.state[1], robot.state[2]);
     visualizer.renderPath(*robot.getPlan());
 }
 

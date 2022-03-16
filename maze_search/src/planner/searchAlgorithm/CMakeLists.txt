@@ -4,6 +4,7 @@ add_library(searchAlgorithm SHARED
 add_subdirectory(aStar)
 
 target_link_libraries(searchAlgorithm PUBLIC
-                                      aStar)
+                                      aStar
+                                      nlohmann_json::nlohmann_json)
 
 target_include_directories(searchAlgorithm PRIVATE ${PROJECT_SOURCE_DIR}/src)

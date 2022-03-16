@@ -6,7 +6,8 @@ target_link_libraries(visualizer PUBLIC
                                 ${CMAKE_DL_LIBS}
                                 glad_libs
                                 oglt::graphics oglt::shader oglt::window
-                                glm::glm)
+                                glm::glm
+                                nlohmann_json::nlohmann_json)
 
 target_include_directories(visualizer PUBLIC 
                        ${PROJECT_SOURCE_DIR}/src)

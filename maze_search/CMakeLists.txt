@@ -14,18 +14,8 @@ enable_testing()
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 
-FetchContent_Declare(
-  oglt_repo
-  GIT_REPOSITORY https://github.com/brysonjones/open_gl_tools.git
-  GIT_TAG        main
-)
-FetchContent_GetProperties(oglt_repo)
-if(NOT oglt_repoo_POPULATED)
-  # Fetch the content using previously declared details
-  FetchContent_Populate(oglt_repo)
-  add_subdirectory(${oglt_repo_SOURCE_DIR} ${oglt_repo_BINARY_DIR})
-  include_directories(${oglt_repo_SOURCE_DIR}/src)
-endif()
+include(cmake/oglt.cmake)
+include(cmake/json.cmake)
 
 add_subdirectory(src)
 include_directories(src)
@@ -34,7 +24,7 @@ add_executable(main src/main.cpp)
 
 # HACK: Change the way this file gets placed 
 #       Could generate it on build with the python script?
-file(COPY src/motion_prim_gen/motion_prim.csv
+file(COPY src/motion_prim_gen/motion_prim.json
           DESTINATION ${CMAKE_BINARY_DIR}/bin/Release)
 
 target_link_libraries(main

@@ -1,12 +1,12 @@
 
 #include "aStar.hpp"
 
-
 AStar::AStar() {}
 
 int AStar::setup(std::vector<int> robot_pose, std::vector<int> goal_pose, 
                  std::vector<int> map_bounds, std::vector<Obstacle> *obstacles) {
     
+    loadMotionPrimitves("build/bin/Release/motion_prim.json");
     // store start and goal poses
     current_state = robot_pose;
     goal_state = goal_pose;
@@ -147,18 +147,21 @@ void AStar::computePath(){
         current_state_node = popOpenList();
 
         // for every successor s’ of s such that s’ not in CLOSED
-        for (int i = 0; i < NUMOFDIRS; i++){
-            // update s' location
-            state_prime.node_pose[0] = current_state_node.node_pose[0] + dX[i];
-            state_prime.node_pose[1] = current_state_node.node_pose[1] + dY[i]; 
-            state_prime.parent = &closed_list[current_state_node.node_pose];
-            if (!isStateValid(state_prime) || isStateObstacle(state_prime)){continue;}
-            // if g(s’) > g(s) + c(s,s’)
-            if (closed_list.find(state_prime.node_pose) == closed_list.end() &&
-                getG(state_prime.node_pose) > current_state_node.g + cost){
-                // g(s’) = g(s) + c(s,s’);
-                // insert s’ into OPEN;
-                insertIntoOpenList(current_state_node, state_prime); 
+        for (int i = 0; i<dTheta.size(); i++){            
+            state_prime.node_pose[2] = current_state_node.node_pose[2] + dTheta[i];
+            for (int j = 0; j < NUMOFDIRS; j++){
+                // update s' location
+                state_prime.node_pose[0] = current_state_node.node_pose[0] + dX[j];
+                state_prime.node_pose[1] = current_state_node.node_pose[1] + dY[j]; 
+                state_prime.parent = &closed_list[current_state_node.node_pose];
+                if (!isStateValid(state_prime) || isStateObstacle(state_prime)){continue;}
+                // if g(s’) > g(s) + c(s,s’)
+                if (closed_list.find(state_prime.node_pose) == closed_list.end() &&
+                    getG(state_prime.node_pose) > current_state_node.g + cost){
+                    // g(s’) = g(s) + c(s,s’);
+                    // insert s’ into OPEN;
+                    insertIntoOpenList(current_state_node, state_prime); 
+                }
             }
         }
     }

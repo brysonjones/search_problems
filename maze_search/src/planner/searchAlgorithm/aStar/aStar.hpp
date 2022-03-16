@@ -1,6 +1,6 @@
 #pragma once
 
-#include<limits.h> 
+#include <limits.h> 
 #include <deque>
 #include <queue>     
 #include <unordered_map>
@@ -14,6 +14,7 @@
 #include <memory.h>
 
 #include "environment/environment.hpp"
+#include "motionPrim.hpp"
 
 namespace aStar {
 
@@ -68,7 +69,7 @@ class AStar {
         int NUMOFDIRS = 8;
         int dX[8] = {-1, -1, -1,  0,  0,  1, 1, 1};
         int dY[8] = {-1,  0,  1, -1,  1, -1, 0, 1};
-        int dTheta[8] = {0, 0, 0, 0, 0, 0, 0, 0}; // HACK: Temp to test 3D search
+        std::vector<int> dTheta = {-5, 0, 5}; // HACK: Temp to test 3D search
 
         // map variables
         std::vector<int> x_bounds;
