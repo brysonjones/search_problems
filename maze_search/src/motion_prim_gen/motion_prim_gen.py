@@ -23,7 +23,7 @@ inputs:
     kappa: curvature
 '''
 def gen_ackermann(num_prims, arc_length, kappa):
-    output_file = "motion_prim.csv"
+    output_file = "motion_prim.json"
 
     fig = plt.figure()
     ax = plt.subplot(111)
@@ -33,42 +33,46 @@ def gen_ackermann(num_prims, arc_length, kappa):
 
     # discretize kappa into range to generate correct number of primitives
     disc_kappa = np.linspace(-kappa, kappa, num_prims)
-    with open(output_file, 'w', newline='\n') as f:
-        writer = csv.writer(f)
-        for i, kappa_i in enumerate(disc_kappa):
-            writer.writerow(["mprim"])
-            if kappa_i != 0:
-                radius = 1 / kappa_i
-                end_angle = arc_length / radius
-            else:
-                x = np.zeros(num_segments)
-                y = np.linspace(0, arc_length, num_segments)
-                theta = np.zeros(num_segments)
-                ax.plot(x, y)
-                writer.writerow("x")
-                writer.writerow(x)
-                writer.writerow("y")
-                writer.writerow(y)
-                writer.writerow(["theta"])
-                writer.writerow(theta)
-                continue
 
-            # The coordinates of the arc
-            theta = np.linspace(start_angle, end_angle, num_segments)
-            x = radius * np.cos(theta) - radius
-            y = radius * np.sin(theta)
-            writer.writerow("x")
-            writer.writerow(x)
-            writer.writerow("y")
-            writer.writerow(y)
-            writer.writerow(["theta"])
-            writer.writerow(theta)
-
+    mprim_blob = json.loads('{}')
+    mprim_list = []
+    for i, kappa_i in enumerate(disc_kappa):
+        tmp_dict = {}
+        if kappa_i != 0:
+            radius = 1 / kappa_i
+            end_angle = arc_length / radius
+        else:
+            x = np.zeros(num_segments)
+            y = np.linspace(0, arc_length, num_segments)
+            theta = np.zeros(num_segments)
             ax.plot(x, y)
+            tmp_dict["x"] = x.tolist()
+            tmp_dict["y"] = y.tolist()
+            tmp_dict["theta"] = theta.tolist()
+            mprim_list.append(tmp_dict)
+            continue
 
+        # The coordinates of the arc
+        theta = np.linspace(start_angle, end_angle, num_segments)
+        x = radius * np.cos(theta) - radius
+        y = radius * np.sin(theta)
+        tmp_dict["x"] = x.tolist()
+        tmp_dict["y"] = y.tolist()
+        tmp_dict["theta"] = theta.tolist()
+        mprim_list.append(tmp_dict)
+
+        ax.plot(x, y)
+
+    mprim_blob["mprims"] = mprim_list
     ax.set(xlim=[-50, 50], ylim=[0, 50])
 
+    # Save json blob
+    mprim_str = json.dumps(mprim_blob)
+    with open(output_file, 'w') as outfile:
+        outfile.write(mprim_str)
+
     plt.show()
+    print(mprim_str)
 
 if __name__ == "__main__":
 
