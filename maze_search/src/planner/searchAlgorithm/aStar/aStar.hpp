@@ -13,8 +13,18 @@
 #include <iostream>
 #include <memory.h>
 
+// glm
+#include <glm/glm.hpp>
+#include <glm/vec4.hpp> // glm::vec4
+#include <glm/mat4x4.hpp> // glm::mat4
+#include <glm/ext/matrix_transform.hpp> 
+#include <glm/gtc/type_ptr.hpp>
+
+// proprietary
 #include "environment/environment.hpp"
 #include "motionPrim.hpp"
+
+using namespace nlohmann;
 
 namespace aStar {
 
@@ -66,9 +76,9 @@ class AStar {
         void backTracePath();
 
         // motion directions
-        int NUMOFDIRS = 8;
-        int dX[8] = {-1, -1, -1,  0,  0,  1, 1, 1};
-        int dY[8] = {-1,  0,  1, -1,  1, -1, 0, 1};
+        int NUMOFDIRS = 4;
+        int dX[8] = {-15, 0, 0, 15};
+        int dY[8] = {0, -15, 15, 0};
         std::vector<int> dTheta = {-5, 0, 5}; // HACK: Temp to test 3D search
 
         // map variables
@@ -87,7 +97,9 @@ class AStar {
     private:
         bool isStateValid(Node state);
         int updateMap();
+        std::vector<int> getNextState(std::vector<int> pose, int x, int y, int theta);
         bool isStateObstacle(Node state);
+        bool isPrimitiveValid(int primNum);
         bool isGoalExpanded();
         int getH(Node state);
         int getG(std::vector<int> &state);
@@ -96,6 +108,8 @@ class AStar {
 
         std::vector<Obstacle> *_obstacles;
         int map[1000][1000] = {0};
+        json primitives;
+
         std::unordered_map<std::vector<int>, Node, VectorHasher> closed_list;
         std::priority_queue<Node, std::vector<Node>, LessThanByF> open_list;
         std::unordered_map<std::vector<int>, Node, VectorHasher> open_list_map;

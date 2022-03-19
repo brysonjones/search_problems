@@ -16,7 +16,7 @@ int main(int argc, char** argv)
     std::vector<int> map_size = {1000, 1000};
     std::vector<int> map_bounds = {-500, 500, -500, 500};
     std::vector<int> robot_pose {0, 0, 0};
-    std::vector<int> goal {250, 420, 45};
+    std::vector<int> goal {250, 420, 0};
 
     // init simulation
     static Simulator simulator;  // TODO :Research more why making this static was important -- too much memory on stack?

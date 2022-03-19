@@ -34,10 +34,10 @@ int Simulator::updateObstacles(){
     // TODO: make modular to many obstacles
     // HACK: currently, the rendering is RELATIVE position, instead of ABSOLUTE
     //       Fix this in OpenGL tools
-    obstacles[0].state[0] = 150;
-    obstacles[0].state[1] = 100 + 250 * cos(glfwGetTime());
-    visualizer.renderObstacles(obstacles[0].state[0] - 150, 
-                               obstacles[0].state[1] - 100);
+    // obstacles[0].state[0] = 150;
+    // obstacles[0].state[1] = 100 + 250 * cos(glfwGetTime());
+    visualizer.renderObstacles(obstacles[0].state[0], 
+                               obstacles[0].state[1]);
 }
 
 int Simulator::updateMap(){

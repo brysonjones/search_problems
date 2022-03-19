@@ -4,8 +4,8 @@
 
 using namespace nlohmann;
 
-void loadMotionPrimitves(std::string file_path){
+void loadMotionPrimitves(std::string file_path, json &primitives){
     std::ifstream file;
     file.open(file_path);
-    json motion_prim_blob = json::parse(file);
+    primitives = json::parse(file);
 }
